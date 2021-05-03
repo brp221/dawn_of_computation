@@ -47,11 +47,11 @@ class DFA(object):
         # in delta for each symbol in Sigma.
         
         for k,v in self.Delta.items():
-            print("Current Transition: ", k, "--> ", v)
+            #print("Current Transition: ", k, "--> ", v)
             for symbol in self.Sigma:
-                print("symbol : ",symbol )
+                #print("symbol : ",symbol )
                 if not symbol in v:
-                    print("symbol : ",symbol , " is not in : ", k, "--> ", v)
+                    print("symbol: ",symbol , " is not in: ", k, "--> ", v)
                     return False
                 
         # If so return True; else return False
@@ -60,8 +60,13 @@ class DFA(object):
        
 
     def acceptDFA(self,s):
-        # Decides if self accepts the string s
-        # Complete this code!
+      ##idea is to create an array of all possible strings and then check if s is in that list? but its infinite
+      ##how about try to create the string s and if it fails return false i like this better
+        generated_string = ''
+        for state in self.Q:
+          for k,v in self.Delta.items():
+            if(state == k):
+              generated_string+=
         return True
         
 
