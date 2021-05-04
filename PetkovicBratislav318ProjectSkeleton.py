@@ -60,13 +60,55 @@ class DFA(object):
        
 
     def acceptDFA(self,s):
-      ##idea is to create an array of all possible strings and then check if s is in that list? but its infinite
-      ##how about try to create the string s and if it fails return false i like this better
-        generated_string = ''
-        for state in self.Q:
-          for k,v in self.Delta.items():
-            if(state == k):
-              generated_string+=
+        ##how about try to create the string s and if it fails return false i like this better
+        #the array to store the transition functions
+
+        s_arr = list(s) #turn string into array 
+        print('\n')
+        state_transitions = []
+        generated_w = []
+        #curr_state keeps track of the current state
+        curr_state = self.q0   
+        counter = 0
+        state_transitions.append(curr_state)
+
+        #iterate over the character array
+        while(len(generated_w) < len(s_arr)):
+            #print("curr char: ", char)
+            #iterating over delta the transition function in order
+            for k,v in sorted(self.Delta.items()):
+                #print(generated_w)            
+                if(k == curr_state):
+                    for k1,v1 in v.items():
+                        #handles array out of bounds
+                        if(counter >= len(s_arr)):
+                            break
+                        if (k1==s_arr[counter]):
+                            #print("k1 == current_char: ", k1, " == ", s_arr[counter])
+                            #print("Before append: ",state_transitions)
+                            #change the current state
+                            curr_state = v1
+                            state_transitions.append(curr_state)
+                            #print("After append: ",state_transitions)
+                            #generated_w
+                            generated_w.append(s_arr[counter])
+                            #pop the element from list
+                            counter = counter + 1
+                            #important to break once the loop has found the needed transition and updated info
+                            break
+        
+        if(not (state_transitions[len(state_transitions)-1] in self.F)):
+            print(s_arr)
+            print("Final State generated: ",state_transitions[len(state_transitions)-1] )
+            print("Final State given: ", self.F)
+            print("state_transitions: " ,state_transitions)
+            print("generated_w: " ,generated_w)
+            return False
+        print(s_arr)
+        print("Final State generated: ",state_transitions[len(state_transitions)-1] )
+        print("Final State given: ", self.F)
+        print("state_transitions: " ,state_transitions)
+        print("generated_w: " ,generated_w)
         return True
         
 

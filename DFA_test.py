@@ -90,14 +90,17 @@ print ("dfa1: ", dfa1.Q, dfa1.Sigma, dfa1.Delta, dfa1.q0, dfa1.F) # should be Tr
 
 print ("dfa2: ", dfa2.Q, dfa2.Sigma, dfa2.Delta, dfa2.q0, dfa2.F) # should be True
 
-print ("verify DFA dfa1: ",dfa1.verifyDFA()) # should be True
+print ("Acceptance DFA dfa1: ","10011", " ", dfa1.acceptDFA('10011')) # should be True
 
-print ("verify DFA dfa4: ",dfa4.verifyDFA()) # should be False
+print ("Acceptance DFA dfa1: ","1111", " ", dfa1.acceptDFA('1111')) # should be False
 
-print ("verify DFA dfa5: ",dfa5.verifyDFA()) # should be False
+print ("Acceptance DFA dfa2: ","10011", " ", dfa2.acceptDFA('10011')) # should be True
 
-print ("verify DFA dfa6: ",dfa6.verifyDFA()) # should be True
+print ("Acceptance DFA dfa2: ","1111", " ", dfa2.acceptDFA('1111')) # should be False
 
-print ("verify DFA dfa7: ",dfa7.verifyDFA()) # should be True
+print ("Acceptance DFA dfa6: ","0101010", " ", dfa6.acceptDFA('0101010')) # should be True
+
+print ("Acceptance DFA dfa7: ","0101010", " ", dfa7.acceptDFA('0101010')) # should be True
+
 
 
