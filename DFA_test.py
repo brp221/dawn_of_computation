@@ -86,21 +86,17 @@ dfa7 = DFA(
     )
 
 
-print ("dfa1: ", dfa1.Q, dfa1.Sigma, dfa1.Delta, dfa1.q0, dfa1.F) # should be True
+#print ("dfa1: ", dfa1.Q, dfa1.Sigma, dfa1.Delta, dfa1.q0, dfa1.F) # should be True
 
-print ("dfa2: ", dfa2.Q, dfa2.Sigma, dfa2.Delta, dfa2.q0, dfa2.F) # should be True
+#print ("dfa2: ", dfa2.Q, dfa2.Sigma, dfa2.Delta, dfa2.q0, dfa2.F) # should be True
 
-print ("Acceptance DFA dfa1: ","10011", " ", dfa1.acceptDFA('10011')) # should be True
+print ("dfa6: ", dfa6.Q, dfa6.Sigma, dfa6.Delta, dfa6.q0, dfa6.F) # should be True
 
-print ("Acceptance DFA dfa1: ","1111", " ", dfa1.acceptDFA('1111')) # should be False
+print ("dfa7: ", dfa7.Q, dfa7.Sigma, dfa7.Delta, dfa7.q0, dfa7.F) # should be True
 
-print ("Acceptance DFA dfa2: ","10011", " ", dfa2.acceptDFA('10011')) # should be True
+#print ("Equivalece of DFAs dfa1 and dfa2: ", dfa1.EQDFA(dfa2)) # should be False
 
-print ("Acceptance DFA dfa2: ","1111", " ", dfa2.acceptDFA('1111')) # should be False
-
-print ("Acceptance DFA dfa6: ","0101010", " ", dfa6.acceptDFA('0101010')) # should be True
-
-print ("Acceptance DFA dfa7: ","0101010", " ", dfa7.acceptDFA('0101010')) # should be True
+print ("Equivalece of DFAs dfa6 and dfa7: ", dfa6.EQDFA(dfa7)) # should be True
 
 
 

@@ -104,20 +104,73 @@ class DFA(object):
             print("state_transitions: " ,state_transitions)
             print("generated_w: " ,generated_w)
             return False
-        print(s_arr)
+        print("String Given:     ",s_arr)
+        print("String Generated: " ,generated_w)
         print("Final State generated: ",state_transitions[len(state_transitions)-1] )
-        print("Final State given: ", self.F)
+        print("Final State(s) given    : ", self.F)
         print("state_transitions: " ,state_transitions)
-        print("generated_w: " ,generated_w)
         return True
         
 
     def emptyDFA(self):
         # Decides if self  accepts no  strings
+        # In toher words, can you reach the final state
         # Complete this code!
        return True
 
     def EQDFA(self,D):
+        # if the 2 DFAs do not contain the same number of symbols and same 
+        # type of symbols they can't generate the sama lang
+        if(self.Sigma != D.Sigma):
+            return False
+        
+        #2-D (or 3-D) array of dictionaries? to store values
+        result_arr = []
+        dfas = [self,D]
+        curr_states = [self.q0, D.q0]
+        state_pairs = [{self.q0, D.q0}]
+        finished = False
+        #start at the initial states for both. For each symbol, see what their transitions are 
+        while(not finished):
+            temp_arr = []
+            counter = 0
+            for dfa in dfas:
+                line = [curr_states[counter]]
+                print("Curr state: ", curr_states[counter])
+                print("Curr line: ", line)
+                #add: [statename, symbol1 symbol2]
+                #symnbols are 0 and 1 only
+                for symbol in dfa.Sigma:
+                    print("curr symbol: ", symbol)
+                    for k,v in dfa.Delta.items():
+                        print(k,"--->", v)
+                        if(curr_states[counter] == k):
+                            for k1,v1 in v.items():
+                                if(k1==symbol):
+                                    print("adding: ", {symbol:v1} )
+                                    line.append({symbol:v1})
+                print("Line: ", line)
+                result_arr.append(line)     
+
+                counter = counter + 1
+                print("Counter is : ", counter)
+               
+            #check to see if the produced table's states are both final or both non final 
+
+            #add the new pair to state_pairs if they already do not exist if they exist add them at next index 
+            #if they already exist at the next index as well you've finished :)
+            # use something such as while state_pairs have not been exhasueted 
+            list1 = list(result_arr[0][1].values())
+            list2 = list(result_arr[1][1].values())
+            print(list1)
+            state_pairs.append({list1[0],list2[0]})
+            print("State_pairs between 2 DFAss: ", state_pairs)
+            finished = True
+                        
+        print("resulting arr: ",result_arr)       
+                
+
+
         # Decides if L(self) = L(D), where D is a DFA
         # Complete this code!
         return True
