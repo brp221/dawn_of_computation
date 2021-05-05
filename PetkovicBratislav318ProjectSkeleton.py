@@ -60,8 +60,7 @@ class DFA(object):
        
 
     def acceptDFA(self,s):
-        ##how about try to create the string s and if it fails return false i like this better
-        #the array to store the transition functions
+        
 
         s_arr = list(s) #turn string into array 
         print('\n')
@@ -119,6 +118,8 @@ class DFA(object):
        return True
 
     def EQDFA(self,D):
+        # Decides if L(self) = L(D), where D is a DFA
+        # APPROACH: MINIMIZE BOTH DFAS AND COMPARE THEM AT EACH STATE
         # if the 2 DFAs do not contain the same number of symbols and same 
         # type of symbols they can't generate the sama lang
         if(self.Sigma != D.Sigma):
@@ -127,75 +128,75 @@ class DFA(object):
         #2-D (or 3-D) array of dictionaries? to store values
         result_arr = []
         dfas = [self,D]
-        #initiate the urrent states to be the initial states at first
-        curr_states = [self.q0, D.q0]
+        #array to hold state_pairs to be iterated over
         state_pairs = [[self.q0, D.q0]]
-        finished = False
+        #all state_pairs which have been iterated over
+        state_pairs_visited_already = [[[self.q0, D.q0]]]
+        
         #start at the initial states for both. For each symbol, see what their transitions are 
-        while(not finished):
-            
+        while(not(len(state_pairs)==0)):
+
+            #print("State_pairs on queue: ",state_pairs )
+            #add to the already visited_pairs
+            state_pairs_visited_already.append(state_pairs[0])
+            #reset counter by placing it here 
             counter = 0
+            #create a line to connect/represent both DFAs
             for dfa in dfas:
-                line = [curr_states[counter]]
-                print("Curr state: ", curr_states[counter])
-                print("Curr line: ", line) # the line to be created
-                #add: [statename, symbol1 symbol2]
-                #symnbols are 0 and 1 only
+                line = [state_pairs[0][counter]]
+                #print("Curr Pair: ",state_pairs[0])
+                ##print("Curr state: ", state_pairs[0][counter])
+                #print("Curr line: ", line) # the line to be created
+                #for each symbol in array of sorted symbols 
                 for symbol in sorted(dfa.Sigma):
-                    print("curr symbol: ", symbol)
                     for k,v in dfa.Delta.items():
-                        print(k,"--->", v)
-                        if(curr_states[counter] == k):
+                        #if the curr_state and the state in transition func are the same
+                        if(state_pairs[0][counter] == k):
                             for k1,v1 in v.items():
+                                #if k1 matches the current loop's symbol
                                 if(k1==symbol):
-                                    print("adding: ", {symbol:v1} )
+                                    #add symbol and corresponding state
                                     line.append({symbol:v1})
                 print("Line: ", line)
-                result_arr.append(line)     
-
+                result_arr.append(line)    
+                
+                #once the counter is 2, the looping has finished, reason being is because we are comparing 2 DFAs
                 counter = counter + 1
-                print("Counter is : ", counter) #if the counter is 2, the looping has finished
-               
-            #add the new pair to state_pairs if they already do not exist if they exist add them at next index 
-            #if they already exist at the next index as well you've finished :)
-            # use something such as while state_pairs have not been exhasueted 
-            
-            
 
+            #creation of the pair from the 'line'
             for i in range(len(result_arr[0])):
-                #print("at index i:", i, " result_arr is:", result_arr[i])
                 #create the pair(or the triple or the n-size(depends on numb of symbols))
                 if(i>0):
                     state_group = []
                     for j in range(len(result_arr)):
                         #extracting state pair
-                        #all except 1st arg so index 1 til ending index
                         #create the pair(or the triple or the n-size(depends on numb of symbols))
                         key,value = next(iter(result_arr[j][i].items()))
-                        print("at index i,j:", j,",",i, " result_arr is:", str(key), ", ", str(value))
+                        #print("at index i,j:", j,",",i, " result_arr is:", str(key), ", ", str(value))
                         state_group.append(value)
-                    print("State_group: ", state_group)
+                        #print("State_group: ", state_group)
+                    print("State_group JOINED: ", state_group)
 
                     #check to see if the state group is all final states or all non-final 
+                    #handles case for the 2DFAs not being equal
                     if(((not state_group[0] in self.F) and (state_group[1] in D.F)) or((not state_group[1] in self.F) and (state_group[0] in D.F))):
                         print("state_group[0]:",state_group[0], "is not in self.F:", self.F)
                         print("state_group[1]:",state_group[1], "is not in D.F:", D.F)
-                        return false
-                    #only add the state group if it isnt in state_pairs
-                    if(not state_group in state_pairs):
+                        return False
+                    #only add the state group if it has not been visited yet
+                    if(not state_group in state_pairs_visited_already):
+                        #print("                                     state_group: ",state_group, " is not in state_pairs_visited_already:", state_pairs_visited_already)
                         state_pairs.append(state_group)
-                    print("StatePairs: ", state_pairs)
+                    
+                    #delete the first state pair and move on :):
+                    #print("State_pairs between 2 DFAs: ", state_pairs)
+
+            #pop the 1st state_pair from the queue once algorithm is done with it  
+            state_pairs.pop(0)
+            #reset the result_arr for a new line to be created from a new state_pair
+            result_arr = []
             
-            print("State_pairs between 2 DFAs: ", state_pairs)
-             
-            finished = True
-                        
-        print("resulting arr: ",result_arr)       
-                
-
-
-        # Decides if L(self) = L(D), where D is a DFA
-        # Complete this code!
+        #if the algorithm reaches here, the 2 DFAs are equivalent :)
         return True
 
 

@@ -94,7 +94,7 @@ print ("dfa6: ", dfa6.Q, dfa6.Sigma, dfa6.Delta, dfa6.q0, dfa6.F) # should be Tr
 
 print ("dfa7: ", dfa7.Q, dfa7.Sigma, dfa7.Delta, dfa7.q0, dfa7.F) # should be True
 
-#print ("Equivalece of DFAs dfa1 and dfa2: ", dfa1.EQDFA(dfa2)) # should be False
+print ("Equivalece of DFAs dfa1 and dfa2: ", dfa1.EQDFA(dfa2)) # should be False
 
 print ("Equivalece of DFAs dfa6 and dfa7: ", dfa6.EQDFA(dfa7)) # should be True
 
