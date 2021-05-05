@@ -12,7 +12,7 @@
 #####################################
 ### DFA
 #####################################
-
+import numpy as np
 CoderName = 'Bratislav Petkovic' ## Put your first and last name here
 FunctionsCompleted = {'verifyDFA', 'verifyTM'} ## List all functions you are submitting here
 ### Any function you are not completing, leave as is in the skeleton file: DO NOT DELETE IT
@@ -127,20 +127,21 @@ class DFA(object):
         #2-D (or 3-D) array of dictionaries? to store values
         result_arr = []
         dfas = [self,D]
+        #initiate the urrent states to be the initial states at first
         curr_states = [self.q0, D.q0]
-        state_pairs = [{self.q0, D.q0}]
+        state_pairs = [[self.q0, D.q0]]
         finished = False
         #start at the initial states for both. For each symbol, see what their transitions are 
         while(not finished):
-            temp_arr = []
+            
             counter = 0
             for dfa in dfas:
                 line = [curr_states[counter]]
                 print("Curr state: ", curr_states[counter])
-                print("Curr line: ", line)
+                print("Curr line: ", line) # the line to be created
                 #add: [statename, symbol1 symbol2]
                 #symnbols are 0 and 1 only
-                for symbol in dfa.Sigma:
+                for symbol in sorted(dfa.Sigma):
                     print("curr symbol: ", symbol)
                     for k,v in dfa.Delta.items():
                         print(k,"--->", v)
@@ -153,18 +154,40 @@ class DFA(object):
                 result_arr.append(line)     
 
                 counter = counter + 1
-                print("Counter is : ", counter)
+                print("Counter is : ", counter) #if the counter is 2, the looping has finished
                
-            #check to see if the produced table's states are both final or both non final 
-
             #add the new pair to state_pairs if they already do not exist if they exist add them at next index 
             #if they already exist at the next index as well you've finished :)
             # use something such as while state_pairs have not been exhasueted 
-            list1 = list(result_arr[0][1].values())
-            list2 = list(result_arr[1][1].values())
-            print(list1)
-            state_pairs.append({list1[0],list2[0]})
-            print("State_pairs between 2 DFAss: ", state_pairs)
+            
+            
+
+            for i in range(len(result_arr[0])):
+                #print("at index i:", i, " result_arr is:", result_arr[i])
+                #create the pair(or the triple or the n-size(depends on numb of symbols))
+                if(i>0):
+                    state_group = []
+                    for j in range(len(result_arr)):
+                        #extracting state pair
+                        #all except 1st arg so index 1 til ending index
+                        #create the pair(or the triple or the n-size(depends on numb of symbols))
+                        key,value = next(iter(result_arr[j][i].items()))
+                        print("at index i,j:", j,",",i, " result_arr is:", str(key), ", ", str(value))
+                        state_group.append(value)
+                    print("State_group: ", state_group)
+
+                    #check to see if the state group is all final states or all non-final 
+                    if(((not state_group[0] in self.F) and (state_group[1] in D.F)) or((not state_group[1] in self.F) and (state_group[0] in D.F))):
+                        print("state_group[0]:",state_group[0], "is not in self.F:", self.F)
+                        print("state_group[1]:",state_group[1], "is not in D.F:", D.F)
+                        return false
+                    #only add the state group if it isnt in state_pairs
+                    if(not state_group in state_pairs):
+                        state_pairs.append(state_group)
+                    print("StatePairs: ", state_pairs)
+            
+            print("State_pairs between 2 DFAs: ", state_pairs)
+             
             finished = True
                         
         print("resulting arr: ",result_arr)       
