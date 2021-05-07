@@ -110,12 +110,43 @@ class DFA(object):
         print("state_transitions: " ,state_transitions)
         return True
         
-
+    
+    #can be improved
     def emptyDFA(self):
         # Decides if self  accepts no  strings
         # In toher words, can you reach the final state
         # Complete this code!
-       return True
+
+        #APPROACH1: REVERSE ENGINEER; see if it is possible to reach the initial state given final state(s) >:)
+        #APPROACH2: Make a tree (actually a 2-D matrix where each possibility is a new matrix inside that matrix )
+        backtrack = [[]]
+        counter=0
+        for final_state in self.F:
+            backtrack[counter].append(final_state)
+            counter= counter+1
+        
+        print(backtrack)
+            
+        #assume the dfa is empty
+        empty = True
+        #iterate over transition fucntion Delta
+        for k,v in self.Delta.items():
+            #print("On state: ", k," transitions are: ", v )
+            for k1,v1 in v.items():
+                for branch in backtrack:
+                    print("curr final state is: ", branch[counter1], '\n')
+                    if(branch[0] == v1):
+                        backtrack[0].append(k)
+                        print(branch[0], " == ", v1)
+                        print("Found the final state: ", k, "--->", v)
+                        print("backtrack: ",backtrack)
+                        empty = False
+                        return empty
+                    counter1 = counter1 + 1
+                    
+        
+        
+        return empty
 
     def EQDFA(self,D):
         # Decides if L(self) = L(D), where D is a DFA
@@ -218,9 +249,31 @@ class PDA(object):
          # Decides if self is a correct PDA
          # Complete this code!
          # DO NOT change the input representation of PDAs
+         #PDA is not verified if:
+            #on its transition function delta, any of teh transitions are missing any of the symbols
+            #sigma or gamma contain 'e'
+
+        if(('e' in self.Sigma) or ('e' in self.Gamma)):
+            print('Sigma and Delta may not contain \'e\', which we use to denote the empty string')    
+        #create an array of symbols for each transition func
+        arr=[]
+        for k,v in self.Delta.items():
+            object_transition = []
+            object_transition.append(k)
+            for k1,v1 in v.items():
+                #add all the the symbols to the corresponding transition
+                object_transition.append(k1)
+            arr.append(object_transition)
+                 
+        print("arr:", arr)
+            
+        for symbol in self.Sigma:
+            for each in arr:
+                if(not(symbol in each)):
+                    print("symbol:", symbol, " is not in ", each)
+                    return False
         
-        
-         return True
+        return True
 
     def acceptPDA(self,s):
         # Decides if self accepts s with at most 2|s| transitions from the start state
