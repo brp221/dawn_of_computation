@@ -14,7 +14,7 @@
 #####################################
 import numpy as np
 CoderName = 'Bratislav Petkovic' ## Put your first and last name here
-FunctionsCompleted = {'verifyDFA', 'verifyTM'} ## List all functions you are submitting here
+FunctionsCompleted = {'verifyDFA', 'verifyTM','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA' } ## List all functions you are submitting here
 ### Any function you are not completing, leave as is in the skeleton file: DO NOT DELETE IT
 
 class DFA(object):
@@ -279,8 +279,98 @@ class PDA(object):
         # Decides if self accepts s with at most 2|s| transitions from the start state
         # Must try all possible transitions
         # Complete this code!
-        return True
+        stack = []
+        state_transitions = [self.q0]
+        string_created = ''
+        #special case of empty string s                        
+        if(string_created==''):
+            last_index = len(state_transitions)-1
+            if((state_transitions[last_index] in self.F) and s==string_created):
+                print("String accepted because given string s:",s," === generated string g:",string_created)
+                print("State transition: ",state_transitions[last_index], "is in final states: ", self.F)
+                return True
+            if((not(state_transitions[last_index] in self.F)) and s==string_created):
+                print("String rejected because because even though given string s:",s," === generated string g:",string_created)
+                print("State transition: ",state_transitions[last_index], "is not a final state: ", self.F)
+                return False
 
+        for char in s:
+            #print("char is: ",char)
+            for k,v in self.Delta.items():
+                #print(k,"--->",v)
+                curr_state = state_transitions[len(state_transitions) -1]
+                #print("curr_state: ", curr_state)
+                if(k==curr_state):
+                    #print("for k=",k, "transitions are: ", v)
+                    for k1,v1 in v.items():
+                        #case for input being empty/not being considered
+                        if((k1=='e')and (len(v1)>0)):
+                            #print("v1[0]:", v1[0])
+                            #print("e case")
+                            #print("len of v1:", len(v1[0])) #assume always 3 for now
+                            #print('UMM: ', [v1[0][1]])
+                            #print('YEAH: ', stack)
+                            #print(stack == [v1[0][1]])
+                            #case for pushing $ on stack; the START
+                            if(v1[0][1] == 'e' and (len(stack)==0)):
+                                #print("E CASE DID SOMETHING")
+                                state_transitions.append(v1[0][0])
+                                stack.append(v1[0][2])  # the $ symbol to denote bottom of stack
+                                #print('stack: ', stack)
+                                #print("string_created: ", string_created)
+                                #print('state_transitions: ', state_transitions)
+                                print('\n')
+                            #case for popping $ off stack; the END
+                            if((v1[0][1] == '$') and (stack == [v1[0][1]])):
+                                #print('UMM: ', [v1[0][1]])
+                                #print('YEAH: ', stack)
+                                state_transitions.append(v1[0][0])
+                                #print('stack: ', stack)
+                                stack.pop()  # the $ symbol to denote bottom of stack
+                                #print('stack: ', stack)
+                                #print("string_created: ", string_created)
+                                #print('state_transitions: ', state_transitions)
+                                last_index = len(state_transitions)-1
+
+                                if((state_transitions[last_index] in self.F) and (s==string_created) and (len(state_transitions)<=len(s)*2)):
+                                    print("String accepted because given string s:",s," === generated string g:",string_created)
+                                    print("(# of transitions)<=2|s|):  ", len(state_transitions), "<=",len(s)*2)
+                                    return True
+                                if((state_transitions[last_index] in self.F) and ((s!=string_created)or(len(state_transitions)>len(s)*2))):
+                                    print("String rejected because given string s:",s," !!== generated string g:",string_created)
+                                    return False
+                                print('\n')
+
+
+                        #input symbol is not 'e', 
+                        else:
+                            if((k1==char) and (len(v1)>0)):
+                                #print("CHAR:", char)
+                                #print("v1[0]:", v1[0])
+                                #print('stack: ', stack)
+                                stack_top = stack[len(stack)-1]
+                                #print('stack_top: ', stack_top)
+                                #only if the stack contains something more than the $ symbol
+                                if(v1[0][1]=='e'):
+                                    #append v1[0][2] to the stack
+                                    stack.append(v1[0][2])
+                                    state_transitions.append(v1[0][0])
+                                    string_created = string_created + k1
+                                    #print('stack: ', stack)
+                                    #print("string_created: ", string_created)
+                                    #print('state_transitions: ', state_transitions)
+                                    print('\n')
+                                #if there is stuff on the stac other than just $, the top of the stack needs to be checked 
+                                if((len(stack)>1) and (v1[0][1]==stack_top)):
+                                    string_created = string_created + k1
+                                    state_transitions.append(v1[0][0])
+                                    stack.pop()
+                                    #print('stack: ', stack)
+                                    #print("string_created: ", string_created)
+                                    #print('state_transitions: ', state_transitions)
+                                    print('\n')
+
+    
     def notEQPDA(self,P,k):
         # Pseudo-recognizes if L(self) != L(P), where P is a  PDA
         # Must try all strings of length  0, 1, 2, .., k.

@@ -37,9 +37,6 @@ pda1A = PDA(
     {'q4'} # F
     )
 
-#print ("pda1: ", pda1.Q, pda1.Sigma, pda1.Gamma, pda1.Delta, pda1.q0, pda1.F)
-
-
 pda2 = PDA(
     {'q1','q2','q3','q4'}, # Q
     {'0','1'}, # Sigma; may not contain 'e', which we use to denote the empty string
@@ -52,14 +49,6 @@ pda2 = PDA(
     'q1', # q0
     {'q4'} # F
     )
-
-
-
-#print ("pda2: ", pda2.Q, pda2.Sigma, pda2.Gamma, pda2.Delta, pda2.q0, pda2.F)
-
-print ("verify PDA pda1: ",pda1.verifyPDA()) # should be True
-
-print ("verify PDA pda2: ",pda2.verifyPDA()) # should be True
 
 pda3 = PDA(
     {'q1','q2','q3','q4'}, # Q
@@ -74,6 +63,24 @@ pda3 = PDA(
     {'q4'} # F
     ) ## Bad PDA
 
+#print ("pda1: ", pda1.Q, pda1.Sigma, pda1.Gamma, pda1.Delta, pda1.q0, pda1.F)
+
 #print ("pda3: ", pda3.Q, pda3.Sigma, pda3.Gamma, pda3.Delta, pda3.q0, pda3.F)
 
-print ("verify PDA pda3: ",pda3.verifyPDA()) # should be False
+print ("Acceptance PDA pda1: ","0011", " ", pda1.acceptPDA('0011')) # should be True
+print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda1: ","001", " ", pda1.acceptPDA('001')) # should be False
+print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda1: ","", " ", pda1.acceptPDA('')) # should be True
+print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda2: ","0011", " ", pda2.acceptPDA('0011')) # should be True
+print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda2: ","001", " ", pda2.acceptPDA('001')) # should False
+print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda2: ","", " ", pda2.acceptPDA('')) # should be false
+print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda1A: ","0011", " ", pda1A.acceptPDA('0011')) # should be True
+print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda1A: ","001", " ", pda1A.acceptPDA('001')) # should False
+print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda1A: ","", " ", pda1A.acceptPDA('')) # should be false
