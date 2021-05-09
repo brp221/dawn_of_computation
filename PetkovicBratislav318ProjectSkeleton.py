@@ -419,6 +419,9 @@ class PDA(object):
         # Must try all strings of length  0, 1, 2, .., k.
         # When it reaches strings of length  k+1, it returns false.
         # Complete this code!
+        genrtd_strgs = []
+
+        #generate a string of length k
         return True  
                
         
@@ -463,6 +466,22 @@ class TM(object):
         # Add code verifying that each state in Q has one and only one transtion
         # in delta for each symbol in Gamma.
         # If so return True; otherwise return False
+        states_found =[]
+        for state in self.Q:
+            states_found =[]
+            for k,v in self.Delta.items():
+                states_found.append(k)
+                if (state==k):
+                    #print("state=", state, " k=", k)
+                    #print("state matches k, v is : ", v, "\n")
+                    for symbol in self.Gamma:
+                        #print("symbol : ",symbol )
+                        if not symbol in v:
+                            print("symbol: ",symbol , " is not in: ", k, "--> ", v)
+                            return False
+            if((state!='accept') and (state!='reject') and (not (state in states_found))):
+                print("state: ", state, "not in: ", states_found)
+                return False
 
         return True    
        
