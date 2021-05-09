@@ -294,8 +294,14 @@ class PDA(object):
                 print("State transition: ",state_transitions[last_index], "is not a final state: ", self.F)
                 return False
 
-        for char in s:
-            #print("char is: ",char)
+        s_arr = list(s)
+        s_created = []
+        print(s_arr)
+        counter=0
+
+        while(counter<len(s_arr)):
+            current_char=s_arr[counter]
+            print("char is: ",current_char)
             for k,v in self.Delta.items():
                 #print(k,"--->",v)
                 curr_state = state_transitions[len(state_transitions) -1]
@@ -305,71 +311,108 @@ class PDA(object):
                     for k1,v1 in v.items():
                         #case for input being empty/not being considered
                         if((k1=='e')and (len(v1)>0)):
-                            #print("v1[0]:", v1[0])
+                            print("v1:", v1)
+                            print("v1[0]:", v1[0])
                             #print("e case")
-                            #print("len of v1:", len(v1[0])) #assume always 3 for now
+                            print("len of v1[0]:", len(v1[0])) #assume always 3 for now
+                            v1_len = len(v1)
                             #print('UMM: ', [v1[0][1]])
-                            #print('YEAH: ', stack)
+                            print('stack: ', stack)
                             #print(stack == [v1[0][1]])
-                            #case for pushing $ on stack; the START
-                            if(v1[0][1] == 'e' and (len(stack)==0)):
-                                #print("E CASE DID SOMETHING")
-                                state_transitions.append(v1[0][0])
-                                stack.append(v1[0][2])  # the $ symbol to denote bottom of stack
-                                #print('stack: ', stack)
-                                #print("string_created: ", string_created)
-                                #print('state_transitions: ', state_transitions)
-                                print('\n')
-                            #case for popping $ off stack; the END
-                            if((v1[0][1] == '$') and (stack == [v1[0][1]])):
-                                #print('UMM: ', [v1[0][1]])
-                                #print('YEAH: ', stack)
-                                state_transitions.append(v1[0][0])
-                                #print('stack: ', stack)
-                                stack.pop()  # the $ symbol to denote bottom of stack
-                                #print('stack: ', stack)
-                                #print("string_created: ", string_created)
-                                #print('state_transitions: ', state_transitions)
-                                last_index = len(state_transitions)-1
-
-                                if((state_transitions[last_index] in self.F) and (s==string_created) and (len(state_transitions)<=len(s)*2)):
-                                    print("String accepted because given string s:",s," === generated string g:",string_created)
-                                    print("(# of transitions)<=2|s|):  ", len(state_transitions), "<=",len(s)*2)
-                                    return True
-                                if((state_transitions[last_index] in self.F) and ((s!=string_created)or(len(state_transitions)>len(s)*2))):
-                                    print("String rejected because given string s:",s," !!== generated string g:",string_created)
+                            i=0
+                            temp_arr = s_created
+                            while(i<v1_len):
+                                #i think this does backtracking
+                                s_created = temp_arr
+                                #case for pushing $ on stack; the START
+                                if(v1[i][1] == 'e' and (len(stack)==0)):
+                                    #print("E CASE DID SOMETHING")
+                                    state_transitions.append(v1[i][0])
+                                    stack.append(v1[i][2])  # the $ symbol to denote bottom of stack
+                                    print('stack: ', stack)
+                                    print("string_created: ", s_created)
+                                    print('state_transitions: ', state_transitions)
+                                    print('\n')
+                                #case for popping $ off stack; the END
+                                if((v1[i][1] == '$') and (stack == [v1[i][1]])):
+                                    #print('UMM: ', [v1[0][1]])
+                                    #print('YEAH: ', stack)
+                                    state_transitions.append(v1[i][0])
+                                    print('stack: ', stack)
+                                    stack.pop()  # the $ symbol to denote bottom of stack
+                                    print('stack: ', stack)
+                                    print("string_created: ", s_created)
+                                    print('state_transitions: ', state_transitions)
+                                    last_index = len(state_transitions)-1
+                                    #if statements for accepting or rejecting input go here at the end of the line 
+                                    #3 conditions to cover are 
+                                        #is the last transition one of the final stransition 
+                                        #is s_arr==s_created
+                                        #is |state_transitions| < 2|s|
+                                        #is it the last possible option: i = v1_len-1
+                                    if((state_transitions[last_index] in self.F) and (s_arr==s_created) and (len(state_transitions)<=len(s)*2)):
+                                        print("String accepted because given string s:",s_arr," === generated string g:",s_created)
+                                        print("(# of transitions)<=2|s|):  ", len(state_transitions), "<=",len(s)*2)
+                                        print('\n')
+                                        return True
+                                    if((state_transitions[last_index] in self.F) and ((s_arr!=s_created)or(len(state_transitions)>len(s)*2))):
+                                        if(i==v1_len-1):
+                                            print("String rejected because given string s:",s_arr," !!== generated string g:",s_created)
+                                            print("OR because the number of state transitions is greater than 2|w|")
+                                            print('\n')
+                                            return False
+                                        
+                                        print("hit a dead end tbh")
+                                        i = i+1
+                                        continue
+                                        
+                                #case for getting to end of string but the stack is not equivalent to ['$'] as it should be 
+                                if((v1[i][1] == '$') and (stack != [v1[i][1]])):
+                                    print("The stack is not empty: ", stack)
+                                    if(i==v1_len-1):
+                                            print("String rejected because given string s:",s_arr," !!== generated string g:",s_created)
+                                            print("OR because the number of state transitions is greater than 2|w|")
+                                            print("OR because the stack isn't empty")
+                                            print('\n')
+                                            return False
+                                    i = i + 1
+                                    continue
                                     return False
-                                print('\n')
-
-
+                                i = i+1
                         #input symbol is not 'e', 
                         else:
-                            if((k1==char) and (len(v1)>0)):
-                                #print("CHAR:", char)
-                                #print("v1[0]:", v1[0])
-                                #print('stack: ', stack)
-                                stack_top = stack[len(stack)-1]
-                                #print('stack_top: ', stack_top)
-                                #only if the stack contains something more than the $ symbol
-                                if(v1[0][1]=='e'):
-                                    #append v1[0][2] to the stack
-                                    stack.append(v1[0][2])
-                                    state_transitions.append(v1[0][0])
-                                    string_created = string_created + k1
-                                    #print('stack: ', stack)
-                                    #print("string_created: ", string_created)
-                                    #print('state_transitions: ', state_transitions)
-                                    print('\n')
-                                #if there is stuff on the stac other than just $, the top of the stack needs to be checked 
-                                if((len(stack)>1) and (v1[0][1]==stack_top)):
-                                    string_created = string_created + k1
-                                    state_transitions.append(v1[0][0])
-                                    stack.pop()
-                                    #print('stack: ', stack)
-                                    #print("string_created: ", string_created)
-                                    #print('state_transitions: ', state_transitions)
-                                    print('\n')
-
+                            if((k1==current_char) and (len(v1)>0)):       
+                                print('stack: ', stack)
+                                
+                                v1_len = len(v1)
+                                #print('UMM: ', [v1[0][1]])
+                                print('stack: ', stack)
+                                #print(stack == [v1[0][1]])
+                                #case for pushing $ on stack; the START
+                                for i in range(v1_len):
+                                    stack_top = stack[len(stack)-1]
+                                    print('stack_top: ', stack_top)
+                                    #only if the stack contains something more than the $ symbol
+                                    if(v1[i][1]=='e'):
+                                        #append v1[0][2] to the stack
+                                        stack.append(v1[i][2])
+                                        state_transitions.append(v1[i][0])
+                                        s_created.append(k1)
+                                        print('stack1: ', stack)
+                                        print("string_created1: ", s_created)
+                                        print('state_transitions1: ', state_transitions)
+                                        print('\n')
+                                    #if there is stuff on the stac other than just $, the top of the stack needs to be checked 
+                                    if((len(stack)>1) and (v1[i][1]==stack_top)):
+                                        s_created.append(k1)
+                                        state_transitions.append(v1[i][0])
+                                        print('stack before pop: ', stack)
+                                        stack.pop()
+                                        print('stack after pop: ', stack)
+                                        print("string_created: ", s_created)
+                                        print('state_transitions: ', state_transitions)
+                                        print('\n')
+            counter = counter + 1
     
     def notEQPDA(self,P,k):
         # Pseudo-recognizes if L(self) != L(P), where P is a  PDA

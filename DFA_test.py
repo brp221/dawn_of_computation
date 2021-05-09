@@ -71,6 +71,9 @@ print ("Acceptance PDA pda1: ","0011", " ", pda1.acceptPDA('0011')) # should be 
 print("----------------------------------------------------------\n")
 print ("Acceptance PDA pda1: ","001", " ", pda1.acceptPDA('001')) # should be False
 print("----------------------------------------------------------\n")
+print ("Acceptance PDA pda2: ","0011", " ", pda2.acceptPDA('0011')) # should be True
+print("----------------------------------------------------------\n")
+print("----------------------------------------------------------\n")
 print ("Acceptance PDA pda1: ","", " ", pda1.acceptPDA('')) # should be True
 print("----------------------------------------------------------\n")
 print ("Acceptance PDA pda2: ","0011", " ", pda2.acceptPDA('0011')) # should be True
@@ -84,3 +87,4 @@ print("----------------------------------------------------------\n")
 print ("Acceptance PDA pda1A: ","001", " ", pda1A.acceptPDA('001')) # should False
 print("----------------------------------------------------------\n")
 print ("Acceptance PDA pda1A: ","", " ", pda1A.acceptPDA('')) # should be false
+print("----------------------------------------------------------\n")
