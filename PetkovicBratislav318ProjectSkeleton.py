@@ -498,30 +498,49 @@ class TM(object):
         # returns false if the number of transitions exceeds k.
         # Complete this code!
         head = 0
-        strng_len = len(s)
         state_transitions = [self.q0]
         gen_string =[]
         curr_state = state_transitions[len(state_transitions)-1]
+        s.append('_')
+        strng_len = len(s)
+        print(s)
         counter1=0
         while(counter1<strng_len):
-            print(s[counter1])
-            for k,v in self.Delta.items():
-                if(k==curr_state):
-                    print("k: ",k, " ---> v: ", v)
+            print(s[head])
+            for key,v in self.Delta.items():
+                if(key==curr_state):
+                    print("k: ",key, " ---> v: ", v)
                     for k1,v1 in v.items():
                         #current tape symbol mathches transition symbol 
                         if(s[head]==k1):       
                             print("             v.items: ", k1, " ---->", v1)
                             state_transitions.append(v1[0])
                             gen_string.append(v1[1])
-            
+                            if(v1[2] == 'R'):
+                                head+=1
+                                break   #break out of for loop because head was changed
+                            if(v1[2] == 'L'):
+                                head-=1
+                                break   #break out of for loop because head was changed
             #UPDATES PEOPLE
-            print("gen_string: ", gen_string)
+            print("gen_string:        ", gen_string)
             print("state_transitions: ", state_transitions)
             curr_state = state_transitions[len(state_transitions)-1]
             counter1+=1
 
-        return True
+        print("K :", k)
+        if((gen_string == s) and ((state_transitions[len(state_transitions)-1]) == 'accept') and (len(state_transitions)<=k) ):
+            print("Last state: ", state_transitions[len(state_transitions)-1])
+            print("Generated String: ", gen_string)
+            print("Given String: ", s)
+            print("# of transitions: ",len(state_transitions), "<=  k: ", k)
+            return True
+        if((gen_string != s) or ((state_transitions[len(state_transitions)-1]) == 'reject') or (len(state_transitions)>k) ):
+            print("Last state: ", state_transitions[len(state_transitions)-1])
+            print("Generated String: ", gen_string)
+            print("Given String: ", s)
+            print("# of transitions: ",len(state_transitions), "<=  k: ", k)
+            return False
         
             
 #####################################
