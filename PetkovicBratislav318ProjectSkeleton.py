@@ -14,7 +14,9 @@
 #####################################
 import numpy as np
 CoderName = 'Bratislav Petkovic' ## Put your first and last name here
-FunctionsCompleted = {'verifyDFA', 'verifyTM','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA' } ## List all functions you are submitting here
+FunctionsCompleted = {'verifyDFA', 'verifyTM','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA', 'acceptTM' } ## List all functions you are submitting here
+FunctionsStarted = {'acceptPDA'}
+FunctionsToComplete = {'verifyNTM', 'acceptNTM','notEQPDA'}
 ### Any function you are not completing, leave as is in the skeleton file: DO NOT DELETE IT
 
 class DFA(object):
@@ -499,23 +501,25 @@ class TM(object):
         # Complete this code!
         head = 0
         state_transitions = [self.q0]
-        gen_string =[]
         curr_state = state_transitions[len(state_transitions)-1]
         s.append('_')
         strng_len = len(s)
         print(s)
         counter1=0
-        while(counter1<strng_len):
-            print(s[head])
+        while(True):
+            print("s[head]:", s[head])
+            print("curr state: ", curr_state)
             for key,v in self.Delta.items():
+                #if key matches up the curr state
                 if(key==curr_state):
                     print("k: ",key, " ---> v: ", v)
                     for k1,v1 in v.items():
                         #current tape symbol mathches transition symbol 
                         if(s[head]==k1):       
-                            print("             v.items: ", k1, " ---->", v1)
+                            print("k: ",key, " ---> v.items: ", k1, " ---->", v1)
                             state_transitions.append(v1[0])
-                            gen_string.append(v1[1])
+                            s[head] = v1[1]
+                            print("s[",head,"] modified:", s[head])
                             if(v1[2] == 'R'):
                                 head+=1
                                 break   #break out of for loop because head was changed
@@ -523,24 +527,24 @@ class TM(object):
                                 head-=1
                                 break   #break out of for loop because head was changed
             #UPDATES PEOPLE
-            print("gen_string:        ", gen_string)
             print("state_transitions: ", state_transitions)
             curr_state = state_transitions[len(state_transitions)-1]
             counter1+=1
 
-        print("K :", k)
-        if((gen_string == s) and ((state_transitions[len(state_transitions)-1]) == 'accept') and (len(state_transitions)<=k) ):
-            print("Last state: ", state_transitions[len(state_transitions)-1])
-            print("Generated String: ", gen_string)
-            print("Given String: ", s)
-            print("# of transitions: ",len(state_transitions), "<=  k: ", k)
-            return True
-        if((gen_string != s) or ((state_transitions[len(state_transitions)-1]) == 'reject') or (len(state_transitions)>k) ):
-            print("Last state: ", state_transitions[len(state_transitions)-1])
-            print("Generated String: ", gen_string)
-            print("Given String: ", s)
-            print("# of transitions: ",len(state_transitions), "<=  k: ", k)
-            return False
+            if((state_transitions[len(state_transitions)-1]) == 'accept'):
+                #case for more transitions than allowed
+                if(len(state_transitions) > k):
+                    print("# of transitions: ",len(state_transitions), ">  k: ", k)
+                    return False
+                print("Last state: ", state_transitions[len(state_transitions)-1])
+                print("Tape Status: ", s)
+                print("# of transitions: ",len(state_transitions), "<=  k: ", k)
+                return True
+            if(state_transitions[len(state_transitions)-1] == 'reject'):
+                print("Last state: ", state_transitions[len(state_transitions)-1])
+                print("Tape Status: ", s)
+                print("# of transitions: ",len(state_transitions), "<=  k: ", k)
+                return False
         
             
 #####################################
