@@ -83,3 +83,14 @@ tm3 = TM(
 
 print ("verify TM tm3: ",tm3.verifyTM()) # should be False
 
+print ("Acceptance TM tm1 10011: ",tm1.acceptTM(['1','0','0','1','1'],100)) # should be True
+print("--------------------------------------------------------------------------")
+print ("Acceptance TM tm1 1111:",tm1.acceptTM(['1','1','1','1'],100)) # should be False
+print("--------------------------------------------------------------------------")
+#print ("Acceptance TM tmPAL 0: ",tmPAL.acceptTM(['0'],1000)) # should be True
+print("--------------------------------------------------------------------------")
+#print ("Acceptance TM tmPAL 00: ",tmPAL.acceptTM(['0','0'],1000)) # should be True
+print("--------------------------------------------------------------------------")
+#print ("Acceptance TM tmPAL 11011: ",tmPAL.acceptTM(['1','1','0','1','1'],1000)) # should be True
+print("--------------------------------------------------------------------------")
+#print ("Acceptance TM tmPAL 1101: ",tmPAL.acceptTM(['1','1','0','1'],1000)) # should be False

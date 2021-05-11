@@ -415,6 +415,10 @@ class PDA(object):
             counter = counter + 1
     
     def notEQPDA(self,P,k):
+
+        #APPROACH: CREATE A STRING. IF A CERTAIN STATE HAS MORE THAN 1 POSSIBLE TRANSITIONS, CHOOSE ONE AT RANDOM. 
+        #THEN RUN THE ALGORITHM TO CREATE SUCH A STRING 1000 TIMES OR UNTIL DESIRED STRING IS REACHED
+
         # Pseudo-recognizes if L(self) != L(P), where P is a  PDA
         # Must try all strings of length  0, 1, 2, .., k.
         # When it reaches strings of length  k+1, it returns false.
@@ -494,7 +498,29 @@ class TM(object):
         # returns false if the number of transitions exceeds k.
         # Complete this code!
         head = 0
-        
+        strng_len = len(s)
+        state_transitions = [self.q0]
+        gen_string =[]
+        curr_state = state_transitions[len(state_transitions)-1]
+        counter1=0
+        while(counter1<strng_len):
+            print(s[counter1])
+            for k,v in self.Delta.items():
+                if(k==curr_state):
+                    print("k: ",k, " ---> v: ", v)
+                    for k1,v1 in v.items():
+                        #current tape symbol mathches transition symbol 
+                        if(s[head]==k1):       
+                            print("             v.items: ", k1, " ---->", v1)
+                            state_transitions.append(v1[0])
+                            gen_string.append(v1[1])
+            
+            #UPDATES PEOPLE
+            print("gen_string: ", gen_string)
+            print("state_transitions: ", state_transitions)
+            curr_state = state_transitions[len(state_transitions)-1]
+            counter1+=1
+
         return True
         
             
