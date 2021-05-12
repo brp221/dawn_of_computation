@@ -280,7 +280,7 @@ class PDA(object):
 
     
     def acceptPDA(self,s):
-        def generateString(self,s):
+        def generate_string_pda(self,s):
             # Decides if self accepts s with at most 2|s| transitions from the start state
             # Must try all possible transitions
             # Complete this code!
@@ -394,7 +394,7 @@ class PDA(object):
         print("Umm: ", generateString(self,s))
 
         for i in range(0,200):
-            if(generateString(self,s)==True):
+            if(generate_string_pda(self,s)==True):
                 return True
 
         return False
@@ -546,21 +546,137 @@ class NTM(object):
       
 
     def verifyNTM(self):
-        # Decides if self is a correct NTM
-        # DO NOT change the representation of NTM
+        # Decides if self is a correct TM
+        # DO NOT change the representation of TM
+        if('_' in self.Sigma):
+            print('Sigma; may  not contain \'_\', which we use for the blank symbol')
+            return False
+        if(not('_' in self.Gamma)):
+            print('Gamma; \'_\' is the symbol that must be used for blank')
+            return False
+        # Do not modify or delete the following
+        for k,v in self.Delta.items():
+            if not k in self.Q:
+               print ("error:", k, self.Q) 
+               return False  # transition from a non-state
+            for k1,v1 in v.items():
+                #print(k1,"--->",v1)
+                if not k1 in self.Gamma:
+                    print ("error:", k1, self.Sigma)
+                    return False # transition reading a symbol not in Gamma
+                for i in range(0,len(v1)):
+                    if not v1[i][0] in self.Q:
+                        print ("error:", v1[i][0], self.Q)
+                        return False # transition to  a non-state
+                    if not v1[i][1] in self.Gamma:
+                        print ("error:", v1[i][0], self.Gamma)
+                        return False # transition writing a symbol not in Gamma
+                    if not v1[i][2] in ['L','R']:
+                        print ("error:", v1[i][0], "should be L or R")
+                        return False # "should be L or R"
+                
         # Complete this code!
+        # Add code verifying that each state in Q has one and only one transtion
+        # in delta for each symbol in Gamma.
+        # If so return True; otherwise return False
+        states_found =[]
+        for state in self.Q:
+            states_found =[]
+            for k,v in self.Delta.items():
+                states_found.append(k)
+                if (state==k):
+                    #print("state=", state, " k=", k)
+                    #print("state matches k, v is : ", v, "\n")
+                    for symbol in self.Gamma:
+                        #print("symbol : ",symbol )
+                        if not symbol in v:
+                            print("symbol: ",symbol , " is not in: ", k, "--> ", v)
+                            return False
+            if((state!='accept') and (state!='reject') and (not (state in states_found))):
+                print("state: ", state, "not in: ", states_found)
+                return False
+
+        return True   
         
         return True    
-       
     def acceptNTM(self,s,k):
-        # Quasi-recognizes if NTM self accepts s; NTM has no reject state
-        # s is a list; it is used as the initial tape;
-        # assumes head pointing to first symbol in s
-        # If it doesn't reach an accepting state with all transitions of lenght k, return false.
-        # Complete this code!
         
-        head = 0
-        
-        return True
-        
+        def generate_string_ntm(self,s,k):
+                
+            # Quasi-recognizes if NTM self accepts s; NTM has no reject state
+            # s is a list; it is used as the initial tape;
+            # assumes head pointing to first symbol in s
+            # If it doesn't reach an accepting state with all transitions of lenght k, return false.
+            # Complete this code!
+            print("\n\n\ns is: ", s)
+            head = 0
+            state_transitions = [self.q0]
+            curr_state = state_transitions[len(state_transitions)-1]
+            mediary = s
+            temp = s
+            print("temp is: ", temp)
+            temp.append('_')
+            strng_len = len(temp)
+            print(temp)
+            counter1=0
+            while(True):
+                print("\ns[",head,"]:", temp[head])
+                print("curr state: ", curr_state)
+                for key,v in self.Delta.items():
+                    #if key matches up the curr state
+                    if(key==curr_state):
+                        print("k: ",key, " ---> v: ", v)
+                        for k1,v1 in v.items():
+                            #print("k1: ",k1, " ---> v1: ", v1)
+                            #current tape symbol mathches transition symbol 
+                            if(temp[head]==k1):     
+                                print("Possibilities: ", len(v1))
+                                if(len(v1)==0):
+                                    print("hit a dead end where there wasn't a transition")
+                                    print("s is now :", temp)
+                                    return False
+                                m = random.randint(0, len(v1)-1)
+                                print("Chosen Possibility m:", m)
+                                print("k: ",key, " ---> v.items: ", k1, " ---->", v1)
+                                state_transitions.append(v1[m][0])
+                                print("Before: ", s)
+                                temp[head] = v1[m][1]
+                                print("After: ", s)
+                                if(v1[m][2] == 'R'):
+                                    head+=1
+                                    break   #break out of for loop because head was changed
+                                if(v1[m][2] == 'L'):
+                                    head-=1
+                                    break   #break out of for loop because head was changed
+                #UPDATES PEOPLE
+                print("state_transitions: ", state_transitions)
+                curr_state = state_transitions[len(state_transitions)-1]
+                counter1+=1
 
+                if((state_transitions[len(state_transitions)-1]) == 'accept'):
+                    #case for more transitions than allowed
+                    if(len(state_transitions) > k):
+                        print("# of transitions: ",len(state_transitions), ">  k: ", k)
+                        return False
+                    print("Last state: ", state_transitions[len(state_transitions)-1])
+                    print("Tape Status: ", temp)
+                    print("# of transitions: ",len(state_transitions), "<=  k: ", k)
+                    return True
+                #modify
+                if(len(state_transitions) > k):
+                        print("# of transitions: ",len(state_transitions), ">  k: ", k)
+                        return False
+                if(state_transitions[len(state_transitions)-1] == 'reject'):
+                    print("Last state: ", state_transitions[len(state_transitions)-1])
+                    print("Tape Status: ", temp)
+                    print("# of transitions: ",len(state_transitions), "<=  k: ", k)
+                    return False
+            head = 0
+            
+            return True
+            
+        for i in range(0,400):
+            accepted = generate_string_ntm(self,s,k)
+            if(accepted):
+                return True 
+        return False 
