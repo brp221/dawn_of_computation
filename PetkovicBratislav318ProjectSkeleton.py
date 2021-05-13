@@ -15,7 +15,7 @@
 import numpy as np
 import random
 CoderName = 'Bratislav Petkovic' ## Put your first and last name here
-FunctionsCompleted = {'verifyDFA', 'verifyTM','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA', 'acceptTM','verifyNTM' } ## List all functions you are submitting here
+FunctionsCompleted = {'verifyDFA', 'verifyTM','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA', 'acceptTM','verifyNTM','acceptNTM', } ## List all functions you are submitting here
 FunctionsToComplete = {'acceptNTM','notEQPDA'}
 ### Any function you are not completing, leave as is in the skeleton file: DO NOT DELETE IT
 
@@ -403,14 +403,39 @@ class PDA(object):
 
         #APPROACH: CREATE A STRING. IF A CERTAIN STATE HAS MORE THAN 1 POSSIBLE TRANSITIONS, CHOOSE ONE AT RANDOM. 
         #THEN RUN THE ALGORITHM TO CREATE SUCH A STRING 1000 TIMES OR UNTIL DESIRED STRING IS REACHED
+        # Each possibility is of this type [generated_string,stack, state_transitions]
+        # Iterate over all possibilities, if the last state of the indexed possibility is accept, skip it else build on top of it 
 
         # Pseudo-recognizes if L(self) != L(P), where P is a  PDA
         # Must try all strings of length  0, 1, 2, .., k.
         # When it reaches strings of length  k+1, it returns false.
         # Complete this code!
+        possibiliities = [[generated_string,stack, state_transitions]]
         genrtd_strgs = []
+        state_transitions=[self.q0]
+        str_len = 0
+        while(str_len <= k):
+        #generate a string of length str_len
+            print("-------------------------------")
+            print("str_len: ",str_len)
+            curr_state = state_transitions[len(state_transitions) -1]
+            for key,value in self.Delta.items():
+                print("curr_state: ", curr_state)
+                #transition and current state match
+                if(key==curr_state):
+                    print(key, "------->", value)
+                    for k1,v1 in value.items():
+                        #case for input being 'e'
+                        if((k1=='e')and (len(v1)>0)):
+                            print("meikbd")
+                            #the beginning: pushing $ on stack;
+                                if(v1[i][1] == 'e' and (len(stack)==0)):
+                                    #print("E CASE DID SOMETHING")
+                                    state_transitions.append(v1[i][0])
+                                    stack.append(v1[i][2])  # the $ symbol to denote bottom of stack
+                                    print('\n')
 
-        #generate a string of length k
+            str_len+=1
         return True  
                
         
@@ -636,16 +661,17 @@ class NTM(object):
             s.append('_')
             curr_tape = s
             head=0
+            #the array to hold all possibilities of state transition length k
+            #receives an object of this type: [(curr_state_transitions), (curr_tape), (head_pos)]
             all_possibilities = [[state_transitions, curr_tape, head]]
 
-            #total_possibilities receives an object of this type: [(curr_state_transitions), (curr_tape), (head_pos)]
-            #counter to store the length of array 
-            counter_k = 0
+            
+            #counter to store the current maximum state_transitions length
             max_transitions_len=1
             while(max_transitions_len<=k):
        
-                #   SUB-ALGO TO FILTER OUT ALL THE POSSIBILITIES HAVING STATE_TRANSITIONS LENGTH LESS THAN MAXIMUM 
-                #   SUB-ALGO TO CHECK IF ANY OF THE CURRENT POSSIBILITIES HAVE REACHED A FINAL STATE. RETURN TRUE IF YES
+                #   1.SUB-ALGO TO FILTER OUT ALL THE POSSIBILITIES HAVING STATE_TRANSITIONS LENGTH LESS THAN MAXIMUM 
+                #   2.SUB-ALGO TO CHECK IF ANY OF THE CURRENT POSSIBILITIES HAVE REACHED A FINAL STATE. RETURN TRUE IF YES
                 #print("max_transitions_len: ", max_transitions_len)
                 #print("all_possibilities BEFORE FILTERING: ", all_possibilities,"\n")
                 index=0
@@ -657,6 +683,7 @@ class NTM(object):
                         del all_possibilities[index]
                         #print("deleted at index: ", index)
                         index=index-1
+                    #Checks to see if any of the possibilities reach a final accept state
                     else:
                         #last current state
                         last_state = all_possibilities[index][0][len(all_possibilities[index][0])-1]
