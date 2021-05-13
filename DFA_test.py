@@ -86,15 +86,21 @@ print("------------------------------------------------------------------------"
 print("Acceptance NTM ntm2 00000: ",ntm2.acceptNTM(['0','0','0','0','0'],100)) # should be True
 print("------------------------------------------------------------------------")
 #print ("ntmPAL: ", ntmPAL.Q, ntmPAL.Sigma, ntmPAL.Gamma, ntmPAL.Delta, ntmPAL.q0, ntmPAL.qAccept)
-#print ("Acceptance NTM ntm1 10011: ",ntm1.acceptNTM(['1','0','0','1','1'],100)) # should be True
+print ("Acceptance NTM ntm1 10011: ",ntm1.acceptNTM(['1','0','0','1','1'],100)) # should be True
 print("------------------------------------------------------------------------")
-#print ("Acceptance NTM ntmPAL 0: ",ntmPAL.acceptNTM(['0'],1000)) # should be True
-#print ("Acceptance NTM ntmPAL 00: ",ntmPAL.acceptNTM(['0','0'],1000)) # should be True
-#print ("Acceptance NTM ntmPAL 11011: ",ntmPAL.acceptNTM(['1','1','0','1','1'],1000)) # should be True
-#print ("Acceptance NTM ntmPAL 1101: ",ntmPAL.acceptNTM(['1','1','0','1'],100)) # should be False
+print ("Acceptance NTM ntmPAL 0: ",ntmPAL.acceptNTM(['0'],1000)) # should be True
+print("------------------------------------------------------------------------")
+print ("Acceptance NTM ntmPAL 00: ",ntmPAL.acceptNTM(['0','0'],1000)) # should be True
+print("------------------------------------------------------------------------")
+print ("Acceptance NTM ntmPAL 11011: ",ntmPAL.acceptNTM(['1','1','0','1','1'],1000)) # should be True
+print("------------------------------------------------------------------------")
+print ("Acceptance NTM ntmPAL 1101: ",ntmPAL.acceptNTM(['1','1','0','1'],100)) # should be False
+print("------------------------------------------------------------------------")
 #print ("ntmPAL2: ", ntmPAL2.Q, ntmPAL2.Sigma, ntmPAL2.Gamma, ntmPAL2.Delta, ntmPAL2.q0, ntmPAL2.qAccept)
-#print ("Acceptance NTM ntmPAL2 0: ",ntmPAL2.acceptNTM(['0'],1000)) # should be True
-#print ("Acceptance NTM ntmPAL2 00: ",ntmPAL2.acceptNTM(['0','0'],1000)) # should be True
-#print ("Acceptance NTM ntmPAL2 11011: ",ntmPAL2.acceptNTM(['1','1','0','1','1'],1000)) # should be True
+print ("Acceptance NTM ntmPAL2 0: ",ntmPAL2.acceptNTM(['0'],1000)) # should be True
+print("------------------------------------------------------------------------")
+print ("Acceptance NTM ntmPAL2 00: ",ntmPAL2.acceptNTM(['0','0'],1000)) # should be True
+print("------------------------------------------------------------------------")
+print ("Acceptance NTM ntmPAL2 11011: ",ntmPAL2.acceptNTM(['1','1','0','1','1'],1000)) # should be True
 print("------------------------------------------------------------------------")
 print ("Acceptance NTM ntmPAL2 1101: ",ntmPAL2.acceptNTM(['1','1','0','1'],100)) # should be False
