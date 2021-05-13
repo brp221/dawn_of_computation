@@ -86,7 +86,7 @@ print("------------------------------------------------------------------------"
 print("Acceptance NTM ntm2 00000: ",ntm2.acceptNTM(['0','0','0','0','0'],100)) # should be True
 print("------------------------------------------------------------------------")
 #print ("ntmPAL: ", ntmPAL.Q, ntmPAL.Sigma, ntmPAL.Gamma, ntmPAL.Delta, ntmPAL.q0, ntmPAL.qAccept)
-print ("Acceptance NTM ntm1 10011: ",ntm1.acceptNTM(['1','0','0','1','1'],100)) # should be True
+#print ("Acceptance NTM ntm1 10011: ",ntm1.acceptNTM(['1','0','0','1','1'],100)) # should be True
 print("------------------------------------------------------------------------")
 #print ("Acceptance NTM ntmPAL 0: ",ntmPAL.acceptNTM(['0'],1000)) # should be True
 #print ("Acceptance NTM ntmPAL 00: ",ntmPAL.acceptNTM(['0','0'],1000)) # should be True

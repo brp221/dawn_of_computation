@@ -15,9 +15,8 @@
 import numpy as np
 import random
 CoderName = 'Bratislav Petkovic' ## Put your first and last name here
-FunctionsCompleted = {'verifyDFA', 'verifyTM','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA', 'acceptTM' } ## List all functions you are submitting here
-FunctionsStarted = {'acceptPDA'}
-FunctionsToComplete = {'verifyNTM', 'acceptNTM','notEQPDA'}
+FunctionsCompleted = {'verifyDFA', 'verifyTM','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA', 'acceptTM','verifyNTM' } ## List all functions you are submitting here
+FunctionsToComplete = {'acceptNTM','notEQPDA'}
 ### Any function you are not completing, leave as is in the skeleton file: DO NOT DELETE IT
 
 class DFA(object):
@@ -599,84 +598,153 @@ class NTM(object):
         return True   
         
         return True    
-    def acceptNTM(self,s,k):
+    
+    def acceptNTMboo(self,s,k):   
+        print("Global S: ", s) 
+        z=[]
+        for i in range(0,len(s)-1):
+            z.append(s[i])
+        print(z)
+        counter=0
+        while(counter<500):
+            print("Z: ",z)
+            counter+=1
+            accept=self.generate_string_ntm(z,k)
+            if (accept):
+                return False
         
-        def generate_string_ntm(self,s,k):
+        return False 
+
+    def acceptNTM(self,s,k):
                 
             # Quasi-recognizes if NTM self accepts s; NTM has no reject state
             # s is a list; it is used as the initial tape;
-            # assumes head pointing to first symbol in s
+            # assumes head pointing to first symbol in s                
             # If it doesn't reach an accepting state with all transitions of lenght k, return false.
             # Complete this code!
-            print("\n\n\ns is: ", s)
-            head = 0
-            state_transitions = [self.q0]
-            curr_state = state_transitions[len(state_transitions)-1]
-            mediary = s
-            temp = s
-            print("temp is: ", temp)
-            temp.append('_')
-            strng_len = len(temp)
-            print(temp)
-            counter1=0
-            while(True):
-                print("\ns[",head,"]:", temp[head])
-                print("curr state: ", curr_state)
-                for key,v in self.Delta.items():
-                    #if key matches up the curr state
-                    if(key==curr_state):
-                        print("k: ",key, " ---> v: ", v)
-                        for k1,v1 in v.items():
-                            #print("k1: ",k1, " ---> v1: ", v1)
-                            #current tape symbol mathches transition symbol 
-                            if(temp[head]==k1):     
-                                print("Possibilities: ", len(v1))
-                                if(len(v1)==0):
-                                    print("hit a dead end where there wasn't a transition")
-                                    print("s is now :", temp)
-                                    return False
-                                m = random.randint(0, len(v1)-1)
-                                print("Chosen Possibility m:", m)
-                                print("k: ",key, " ---> v.items: ", k1, " ---->", v1)
-                                state_transitions.append(v1[m][0])
-                                print("Before: ", s)
-                                temp[head] = v1[m][1]
-                                print("After: ", s)
-                                if(v1[m][2] == 'R'):
-                                    head+=1
-                                    break   #break out of for loop because head was changed
-                                if(v1[m][2] == 'L'):
-                                    head-=1
-                                    break   #break out of for loop because head was changed
-                #UPDATES PEOPLE
-                print("state_transitions: ", state_transitions)
-                curr_state = state_transitions[len(state_transitions)-1]
-                counter1+=1
 
-                if((state_transitions[len(state_transitions)-1]) == 'accept'):
-                    #case for more transitions than allowed
-                    if(len(state_transitions) > k):
-                        print("# of transitions: ",len(state_transitions), ">  k: ", k)
-                        return False
-                    print("Last state: ", state_transitions[len(state_transitions)-1])
-                    print("Tape Status: ", temp)
-                    print("# of transitions: ",len(state_transitions), "<=  k: ", k)
-                    return True
-                #modify
-                if(len(state_transitions) > k):
-                        print("# of transitions: ",len(state_transitions), ">  k: ", k)
-                        return False
-                if(state_transitions[len(state_transitions)-1] == 'reject'):
-                    print("Last state: ", state_transitions[len(state_transitions)-1])
-                    print("Tape Status: ", temp)
-                    print("# of transitions: ",len(state_transitions), "<=  k: ", k)
-                    return False
-            head = 0
+
+            #   APPROACH: EVERY TIME THAT THE CODE ARRIVES AT MULTIPLE POSSIBILITIES, EACH NEW POSSIBILITY IS 
+            #   CHECKED. EACH NEW STATE IS ADDED TO THE ALL INCLUSIVE ARRAY ("all_strings")   
+
+            #   Si quieres en Espanol:Cada vez cuando la programa llega a multiplicas oportunidades, cada nueva 
+            #   oportunidad se unie con el todo_vector("all_strings")
+            print("\n\n\nGiven String: ", s)
+
+            #holds value of transitions length =k
+            total_strings_len_k =[]
+            state_transitions=[self.q0]
+            curr_tape = s
+            head=0
+            all_possibilities = [[state_transitions, curr_tape, head]]
+
+            #total_possibilities receives an object of this type: [(curr_state_transitions), (curr_tape), (head_pos)]
+            #counter to store the length of array 
+            counter_k = 0
+            temp_counter=0
+            while(temp_counter<k):
+                #   INSERT ALGORITHM TO DELETE ALL OBJECTS WHERE LEN(STATE_TRANSITIONS(i)) <  counter_k
+                #   BASICALLY A FILTER ALGORITHM
+                print("counter_k: ", counter_k)
+                for index in range(0, len(all_possibilities)):
+                    if(len(all_possibilities[index][0])<temp_counter):
+                        print("all_possibilities[",index,"][0]: ",all_possibilities[index][0])
+                        del all_possibilities[index]
+                #   counter for iterating over the all_possibilities array 
+                counter_2=0
+                print("1st WHILE LOOP")
+
+                #the below while loop is a sub-algorithm to be run until len(state_transitions[i]) is == k
+                while(counter_2<len(all_possibilities[0])):
+                    print("2nd WHILE LOOP")
+                    #curr_last_state of the possibility currently adding to 
+                    last_index = len(all_possibilities[counter_2][0]) - 1
+                    #print("last_index",last_index)
+                    curr_last_state = all_possibilities[counter_2][0][last_index]      #triple matrix woah
+                    print("curr_last_state: ", curr_last_state)
+                    for key,value in self.Delta.items():
+                        #when the last state of state_transitions and k1 match
+                        if(key == curr_last_state):
+                            print(key,"----------->",value)
+                            for k1,v1 in value.items():
+                                print("AFTER BREAK?")
+                                #case for current tape[head] matching the symbol for state in delta 
+                                no_transition= True
+                                if(k1==all_possibilities[counter_2][1][head]):
+                                    no_transition = False
+                                    print("                                       ",k1,"---->",v1)
+                                    
+                                    #case 1: only one possibility is possible 
+                                    if(len(v1)==1):
+                                        print("NON-BRANCH")
+                                        #add to the state_transitions
+                                        print("all_possibilities[counter_2][0]: ", all_possibilities[counter_2][0])
+                                        all_possibilities[counter_2][0].append(v1[0][0])
+                                        temp_state_trans = all_possibilities[counter_2][0]
+                                        print("temp_state_trans: ", temp_state_trans)
+                                        #update the tape 
+                                        all_possibilities[counter_2][1][head]=v1[0][1]
+                                        temp_tape = all_possibilities[counter_2][1]
+                                        print("temp_tape: ", temp_tape)
+                                        #create/update the head variable 
+                                        if(v1[0][2]=='R'):
+                                            #to store head 
+                                            temp_head= all_possibilities[counter_2][2] + 1
+                                            print("temp_head: ", temp_head)
+                                        if(v1[0][2]=='L'):
+                                            #to store head 
+                                            temp_head= all_possibilities[counter_2][2] - 1
+                                            print("temp_head: ", temp_head)
+
+                                    #case 2: multiple possibilities, branch the curr possibiility into more possibilities
+                                    if(len(v1)>1):
+                                        print("BRANCH")
+                                        #number of different possibilities
+                                        branches = len(v1)
+                                        counter_3=0
+                                        while(counter_3<branches):
+                                            print("counter_3: ", counter_3)
+                                            #add to the state_transitions
+                                            print("all_possibilities[",counter_2,"][0]: ", all_possibilities[counter_2][0])
+                                            temp_state_trans = []
+                                            print("before temp_state_trans:",temp_state_trans)
+                                            print("v1[counter_3][0]: ", v1[counter_3][0])
+                                            temp_state_trans.extend(all_possibilities[counter_2][0])
+                                            temp_state_trans.extend([v1[counter_3][0]])
+                                            print("after temp_state_trans:",temp_state_trans)
+            
+                                            #update the tape 
+                                            all_possibilities[counter_2][1][head]=v1[counter_3][1]
+                                            temp_tape = all_possibilities[counter_2][1]
+                                            print("temp_tape: ", temp_tape)
+
+                                            #create/update the head variable 
+                                            if(v1[counter_3][2]=='R'):
+                                                #to store head 
+                                                temp_head= all_possibilities[counter_2][2] + 1
+                                                print("temp_head: ", temp_head)
+                                            if(v1[counter_3][2]=='L'):
+                                                #to store head 
+                                                temp_head= all_possibilities[counter_2][2] - 1
+                                                print("temp_head: ", temp_head)
+                                            all_possibilities.append([temp_state_trans, temp_tape, temp_head])
+                                            print("all_possibilities: ", all_possibilities)
+                                            #move to next branch
+                                            counter_3+=1
+                                        
+                                        break
+                                        return False
+                            if(no_transition):
+                                print("there was no transition, dead end")
+                                break
+                        print("counter_2: ", counter_2)
+                        break
+                    #increment while loop to move to another possibility  
+                    counter_2+=1   
+                counter_k+=1
+                temp_counter+=1
+            print("\n\n\n")
+            
             
             return True
-            
-        for i in range(0,400):
-            accepted = generate_string_ntm(self,s,k)
-            if(accepted):
-                return True 
-        return False 
+        
