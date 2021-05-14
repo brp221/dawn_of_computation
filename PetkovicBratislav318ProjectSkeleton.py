@@ -410,32 +410,150 @@ class PDA(object):
         # Must try all strings of length  0, 1, 2, .., k.
         # When it reaches strings of length  k+1, it returns false.
         # Complete this code!
-        possibiliities = [[generated_string,stack, state_transitions]]
-        genrtd_strgs = []
+        #possibiliities = [[generated_string,state_transitions,stack]]
+        stack=[]
         state_transitions=[self.q0]
-        str_len = 0
-        while(str_len <= k):
-        #generate a string of length str_len
-            print("-------------------------------")
-            print("str_len: ",str_len)
-            curr_state = state_transitions[len(state_transitions) -1]
-            for key,value in self.Delta.items():
-                print("curr_state: ", curr_state)
-                #transition and current state match
-                if(key==curr_state):
-                    print(key, "------->", value)
-                    for k1,v1 in value.items():
-                        #case for input being 'e'
-                        if((k1=='e')and (len(v1)>0)):
-                            print("meikbd")
-                            #the beginning: pushing $ on stack;
-                                if(v1[i][1] == 'e' and (len(stack)==0)):
-                                    #print("E CASE DID SOMETHING")
-                                    state_transitions.append(v1[i][0])
-                                    stack.append(v1[i][2])  # the $ symbol to denote bottom of stack
-                                    print('\n')
+        genrtd_strgs = [['',state_transitions,stack]]
 
+        str_len = 0
+        #Algoithm to generate every possibility
+        while(str_len <= k):
+            #generate a string of length str_len
+            print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+            print("str_len: ",str_len)
+            counter_1=0
+            curr_gnrt_strings = len(genrtd_strgs)
+            elements_to_delete = []
+            while(counter_1<curr_gnrt_strings):
+                print("-------------------------------")
+                print("counter_1: ", counter_1)
+                print("current possibility: ", genrtd_strgs[counter_1])
+                curr_state = genrtd_strgs[counter_1][1][len(genrtd_strgs[counter_1][1]) -1]
+                for key,value in self.Delta.items():
+                    #transition and current state match
+                    if(key==curr_state):
+                        print("curr_state: ", curr_state)
+                        print(key, "------->", value)
+                        for k1,v1 in value.items():
+                            #case for input being 'e'
+                            if((k1=='e')and (len(v1)!=0)):
+                                print("E CASE")
+                                #the beginning: pushing $ on stack;
+                                if(v1[0][1] == 'e' and (len(genrtd_strgs[counter_1][2])==0)):
+                                    #update the state_transitions
+                                    temp_state_trans = []
+                                    temp_state_trans.extend(genrtd_strgs[counter_1][1])
+                                    temp_state_trans.extend([v1[0][0]])
+                                    #update the string
+                                    temp_string = ''
+                                    if(v1[0][1] == 'e'):
+                                        temp_string+=''
+                                    if(v1[0][1] != 'e'):
+                                        print("SOME WEIRD CASE")
+                                    #update the stack
+                                    temp_stack =[]
+                                    if(v1[0][2]=='$'):
+                                        temp_stack.append('$')
+                                    #print("             after temp_state_trans:",temp_state_trans)
+                                    stack.append(v1[0][2])  # the $ symbol to denote bottom of stack
+                                    genrtd_strgs.append([temp_string,temp_state_trans,temp_stack])
+                                    print("object added: ",[temp_string,temp_state_trans,temp_stack], "\n")
+                                
+                                #the end; popping off the stack                
+                                if(v1[0][1] == '$' and genrtd_strgs[counter_1][2] == ['$']):
+                                    #update the state_transitions
+                                    temp_state_trans = []
+                                    temp_state_trans.extend(genrtd_strgs[counter_1][1])
+                                    temp_state_trans.extend([v1[0][0]])
+                                    #update the string
+                                    temp_string = '' + genrtd_strgs[counter_1][0]
+                                    if(v1[0][1] == 'e'):
+                                        temp_string+=''
+                                    if(v1[0][1] != 'e'):
+                                        print("SOME WEIRD CASE")
+                                    #update the stack
+                                    temp_stack =[]
+                                    temp_stack.extend(genrtd_strgs[counter_1][2])
+                                    print("stack BEFORE pop: ", temp_stack)
+                                    temp_stack.pop()
+                                    print("stack AFTER pop: ", temp_stack)
+                                    #print("             after temp_state_trans:",temp_state_trans)
+                                    stack.append(v1[0][2])  # the $ symbol to denote bottom of stack
+                                    genrtd_strgs.append([temp_string,temp_state_trans,temp_stack])
+                                    print("object added: ",[temp_string,temp_state_trans,temp_stack], "\n")
+                                
+                            #case for input not being 'e'
+                            elif( (k1!='e')and (len(v1)!=0)):         
+                                print('curr_stack: ', genrtd_strgs[counter_1][2])                      
+                                num_branches = len(v1)
+                                counter_2=0
+                                #certain transitions will have multiple branches while others a singluar branch,  
+                                #both cases can be handled via the while loop 
+                                while(counter_2 < num_branches):
+                                    #there are 2 major cases: popping and not popping from the top of the stack
+                                    #1: case where v1[counter_2][1] = 'e'
+                                    if(v1[counter_2][1] == 'e'):
+                                        print("Stack top irrelevant")
+                                        #update the state_transitions
+                                        temp_state_trans = []
+                                        temp_state_trans.extend(genrtd_strgs[counter_1][1])
+                                        temp_state_trans.extend([v1[counter_2][0]])
+                                        #update the string
+                                        temp_string = '' + genrtd_strgs[counter_1][0] + k1
+                                        #update the stack
+                                        temp_stack =[]
+                                        temp_stack.extend(genrtd_strgs[counter_1][2])
+                                        if(v1[counter_2][2]!='e'):
+                                            temp_stack.extend(v1[counter_2][2])
+                                        #stack.append(v1[0][2])  # the $ symbol to denote bottom of stack
+                                        genrtd_strgs.append([temp_string,temp_state_trans,temp_stack])
+                                        print("object added: ",[temp_string,temp_state_trans,temp_stack], "\n")
+                                
+                                    #1: case where v1[counter_2][1] != 'e'
+                                    if(v1[counter_2][1] != 'e'):
+                                        #first check top of stack
+                                        print("Stack top RELEVANT")
+                                        stack_top = genrtd_strgs[counter_1][2][len(genrtd_strgs[counter_1][2])-1]
+                                        if(v1[counter_2][1] == stack_top):
+                                            #update the state_transitions
+                                            temp_state_trans = []
+                                            temp_state_trans.extend(genrtd_strgs[counter_1][1])
+                                            temp_state_trans.extend([v1[counter_2][0]])
+                                            #update the string
+                                            temp_string = '' + genrtd_strgs[counter_1][0] + k1
+                                            #update the stack
+                                            temp_stack =[]
+                                            temp_stack.extend(genrtd_strgs[counter_1][2])
+                                            print("stack BEFORE pop: ", temp_stack)
+                                            temp_stack.pop()
+                                            print("stack AFTER pop: ", temp_stack)
+                                            #stack.append(v1[0][2])  # the $ symbol to denote bottom of stack
+                                            genrtd_strgs.append([temp_string,temp_state_trans,temp_stack])
+                                            print("object added: ",[temp_string,temp_state_trans,temp_stack], "\n")   
+                                    counter_2+=1
+                        break
+                        print("Am i Here?")
+                print("or Am i Here?")
+                
+                #at this point in the code, it is necessary to delete the previous gen_str element used
+                #especially if it has not reached a final state
+                final_state = genrtd_strgs[counter_1][1][len(genrtd_strgs[counter_1][1])-1]
+                print("final state of ", genrtd_strgs[counter_1], " is ", final_state)
+                #if the stack is not empty or if the last state transition is not a final state throw away that 'possibility'
+                if(not(final_state in self.F) or not(len(genrtd_strgs[counter_1][2]))==0):
+                    #del genrtd_strgs[counter_1]
+                    elements_to_delete.append(genrtd_strgs[counter_1])
+                print("elements_to_delete: ", elements_to_delete)
+                counter_1+=1
+            
+            for m in elements_to_delete:
+                print("finna delete: ",m)
+                genrtd_strgs.remove(m)
+            print("\ngenrtd_strgs:",genrtd_strgs,"\n")
             str_len+=1
+        
+        #   Algo to filter out only valid possibilities, those that go to a final state and nothing is left on the stack
+        
         return True  
                
         
