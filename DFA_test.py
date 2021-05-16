@@ -70,10 +70,10 @@ pda3 = PDA(
     ) ## Bad PDA
 
 
-#print ("Not equivalent PDAs pda1 and pda2: ", pda1.notEQPDA(pda2,5)) # should be True
+print ("Not equivalent PDAs pda1 and pda2: ", pda1.notEQPDA(pda2,5)) # should be True
 print('----------------------------------------------------------------------')
 print ("Not equivalent PDAs pda2 and pda2: ", pda2.notEQPDA(pda2,10)) # should be False
 print('----------------------------------------------------------------------')
-#print ("Not equivalent PDAs pda1 and pda1A: ", pda1.notEQPDA(pda1A,10)) # should be True
-
-#print ("Not equivalent PDAs pda1A and pda2: ", pda1A.notEQPDA(pda2,10)) # should be False
+print ("Not equivalent PDAs pda1 and pda1A: ", pda1.notEQPDA(pda1A,10)) # should be True
+print('----------------------------------------------------------------------')
+print ("Not equivalent PDAs pda1A and pda2: ", pda1A.notEQPDA(pda2,10)) # should be False
