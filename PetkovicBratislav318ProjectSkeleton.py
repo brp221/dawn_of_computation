@@ -15,8 +15,7 @@
 import numpy as np
 import random
 CoderName = 'Bratislav Petkovic' ## Put your first and last name here
-FunctionsCompleted = {'verifyDFA', 'verifyTM','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA', 'acceptTM','verifyNTM','acceptNTM', 'acceptNTM'} ## List all functions you are submitting here
-FunctionsToComplete = {'emptyDFA'}
+FunctionsCompleted = {'verifyDFA','acceptDFA', 'emptyDFA','EQDFA','verifyPDA','acceptPDA','notEQPDA','verifyTM','acceptTM','acceptNTM', 'verifyNTM'} ## List all functions you are submitting here
 ### Any function you are not completing, leave as is in the skeleton file: DO NOT DELETE IT
 
 class DFA(object):
